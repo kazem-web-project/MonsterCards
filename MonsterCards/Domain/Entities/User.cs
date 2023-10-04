@@ -61,14 +61,15 @@ namespace MonsterCards.Domain.Entities
 
         public bool battle(ref User myUser,ref User userOpponent)
         {
-            Deck myUserDeck = new Deck();
-            Deck userOpponentDeck = new Deck();
+
+
 
             for (int i = 0; i < myUser.deck.Count; i++)
             {
                 var randNumsUsed = new List<int>(4) { 0,1,2,3};
                 for (int j = 0; j < userOpponent.deck.Count; j++)
                 {
+                    if (randNumsUsed.Count==0){ return true; }
                     int randNum;
                     do
                     {
@@ -79,78 +80,78 @@ namespace MonsterCards.Domain.Entities
                         }
                     } while (true);
                     //randNumsUsed.Add(randNum);
-                    battleTwoCards(myUser.deck[i], userOpponent.deck[randNum], ref myUserDeck, ref userOpponentDeck);
-
+                    //battleTwoCards(myUser.deck[i], userOpponent.deck[randNum], ref myUserDeck, ref userOpponentDeck);
+                    battleTwoCards(myUser.deck[i], userOpponent.deck[randNum], myUser.deck,  userOpponent.deck);
                 }
             }
-            myUser.deck.Clear();
-            myUser.deck.AddRange(myUserDeck.cardsDeck);
+            // myUser.deck.Clear();
+            //myUser.deck.AddRange(myUserDeck.cardsDeck);
 
-            userOpponent.deck.Clear();
-            userOpponent.deck.AddRange(userOpponentDeck.cardsDeck);
+            // userOpponent.deck.Clear();
+            //userOpponent.deck.AddRange(userOpponentDeck.cardsDeck);
             
             return true;
         }
-        public void battleTwoCards(Card userCard, Card opponentCard,ref Deck myUserDeck,ref Deck OpponentDeck)
+        public void battleTwoCards(Card myCard, Card cardOpponent, List<Card> myUserDeck, List<Card> opponentDeck)
         {
-            if (userCard is SpellCard)
+            if (myCard is SpellCard)
             {
                 
-                switch (userCard.ElementType)
+                switch (myCard.ElementType)
                 {
                     case ElementType.FIRE:
                         // code block
-                        switch (opponentCard.ElementType)
+                        switch (cardOpponent.ElementType)
                         {
                             case ElementType.WATER:
                                 // WATER IS THE WINNER
-                                battleEffective(userCard, opponentCard, ref myUserDeck, ref OpponentDeck);
+                                battleEffective(myCard, cardOpponent, myUserDeck, opponentDeck);
                                 break;
                             case ElementType.NORMAL:
                                 // NORMAL IS THE WINNER
-                                battleEffective(opponentCard, userCard, ref myUserDeck, ref OpponentDeck);
+                                battleEffective(cardOpponent, myCard, myUserDeck, opponentDeck);
                                 break;
                                 
                             default:
-                                battleNoEffective(userCard, opponentCard, ref myUserDeck, ref OpponentDeck);
+                                battleNoEffective(myCard, cardOpponent, myUserDeck, opponentDeck);
                                 break;
                         }
                         break;
                     case ElementType.WATER:
                         // working here
-                        switch (opponentCard.ElementType)
+                        switch (cardOpponent.ElementType)
                         {
                             case ElementType.FIRE:
                                 // WATER IS THE WINNER
-                                battleNoEffective(userCard, opponentCard, ref myUserDeck, ref OpponentDeck);
+                                battleNoEffective(myCard, cardOpponent,  myUserDeck,  opponentDeck);
 
                                 //battleEffective(userCard, opponentCard, ref myUserDeck, ref OpponentDeck);
                                 break;
                             case ElementType.NORMAL:
                                 // NORMAL IS THE WINNER
-                                battleEffective(opponentCard, userCard, ref myUserDeck, ref OpponentDeck);
+                                battleEffective(cardOpponent, myCard,  myUserDeck,  opponentDeck);
                                 break;
 
                             default:
-                                battleNoEffective(userCard, opponentCard, ref myUserDeck, ref OpponentDeck);
+                                battleNoEffective(myCard, cardOpponent,  myUserDeck,  opponentDeck);
                                 break;
                         }
                         break;
                     case ElementType.NORMAL:
-                        switch (opponentCard.ElementType)
+                        switch (cardOpponent.ElementType)
                         {
                             case ElementType.FIRE:
                                 
-                                battleEffective(opponentCard, userCard, ref myUserDeck, ref OpponentDeck);
+                                battleEffective(cardOpponent, myCard,  myUserDeck, opponentDeck);
                                 break;
                             case ElementType.WATER:
                                 // NORMAL IS THE WINNER
-                                battleNoEffective(userCard, opponentCard, ref myUserDeck, ref OpponentDeck);
+                                battleNoEffective(myCard, cardOpponent,  myUserDeck, opponentDeck);
 
                                 break;
 
                             default:
-                                battleNoEffective(userCard, opponentCard, ref myUserDeck, ref OpponentDeck);
+                                battleNoEffective(myCard, cardOpponent,  myUserDeck, opponentDeck);
                                 break;
                         }
                         break; 
@@ -160,42 +161,44 @@ namespace MonsterCards.Domain.Entities
                 }
             } else
             {
-                battleNoEffective(userCard, opponentCard, ref myUserDeck, ref OpponentDeck);
+                battleNoEffective(myCard, cardOpponent, myUserDeck, opponentDeck);
             }
 
         }
 
-        public int battleEffectiveDamage(ref Card myCard)
+        public int battleEffectiveDamage( Card myCard)
         {
             return myCard.Damage *= 2;
         }
-        public int battleNotEffectiveDamage(ref Card myCard)
+        public int battleNotEffectiveDamage( Card myCard)
         {
             return myCard.Damage /= 2;
         }
-        public void battleEffective(Card winCard, Card lostCard, ref Deck myUserDeck, ref Deck OpponentDeck)
+        public void battleEffective(Card winerCard, Card lostCard, List<Card> myUserDeck, List<Card> OpponentDeck)
+            // (Card winerCard, Card lostCard, List<Card> myUserDeck, List<Card> OpponentDeck)
         {
-            int userDamege = battleEffectiveDamage(ref lostCard);
-            int opponentDamage = battleNotEffectiveDamage(ref winCard);
+            int userDamege = battleEffectiveDamage(lostCard);
+            int opponentDamage = battleNotEffectiveDamage(winerCard);
             if (userDamege > opponentDamage)
             {
-                myUserDeck.cardsDeck.Add(winCard);
+                myUserDeck.Add(winerCard);
+                // OpponentDeck.Remove(lostCard);
             }
             else if (userDamege < opponentDamage)
             {
-                OpponentDeck.cardsDeck.Add(lostCard);
+                OpponentDeck.Add(lostCard);
             }
             return;
         }
-        public void battleNoEffective(Card card1, Card card2, ref Deck myUserDeck, ref Deck OpponentDeck)
+        public void battleNoEffective(Card card1, Card card2, List<Card> myUserDeck, List<Card> OpponentDeck)            
         {
             if (card1.Damage > card2.Damage)
             {
-                myUserDeck.cardsDeck.Add(card1);
+                myUserDeck.Add(card1);
             }
             else if (card1.Damage < card2.Damage)
             {
-                OpponentDeck.cardsDeck.Add(card2);
+                OpponentDeck.Add(card2);
             }
 
         }
@@ -228,6 +231,8 @@ namespace MonsterCards.Domain.Entities
         {
             throw new NotImplementedException();
         }
+
+
 
 
     }

@@ -3,11 +3,11 @@ using MonsterCards.Domain.Enums;
 
 namespace MonsterCards.Application
 {
-    internal class Program
+    public static class BusinessLogic
     {
-        static void Main(string[] args)
+        
+        public static void playGame()
         {
-
             /*
             MonsterCard m1 = new MonsterCard("FireTroll", 15, FIRE);
 
@@ -51,7 +51,6 @@ namespace MonsterCards.Application
             List<Card> player1Stack = new List<Card> { m1, m3, m5, m7, m9, m11, m13, m15 };
             List<Card> player2Stack = new List<Card> { m2, m4, m6, m8, m10, m12, m14, m16 };
 
-
             User playerA = new User(player1Stack, 100, "PlayerA");
             User playerB = new User(player2Stack, 100, "PlayerB");
 
@@ -64,6 +63,10 @@ namespace MonsterCards.Application
             playerB.deck.Add(m4);
             playerB.deck.Add(m6);
             playerB.deck.Add(m8);
+
+
+
+
 
             playerA.battle(ref playerA, ref playerB);
 
@@ -80,7 +83,10 @@ namespace MonsterCards.Application
             */
 
             // test battle
-
+        }
+        internal static bool endGame(User playerA, User playerB)
+        {
+            return playerA.stack.Count==0 || playerB.stack.Count==0;
         }
     }
 }
