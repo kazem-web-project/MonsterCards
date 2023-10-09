@@ -17,5 +17,12 @@ namespace MonsterCards.Domain.Entities
         public int Damage { get; set; }
         public ElementType ElementType { get; set; }
 
+        public override bool Equals(object? obj)
+        {
+            return obj is Card card &&
+                   Name == card.Name &&
+                   Damage == card.Damage &&
+                   ElementType == card.ElementType;
+        }
     }
 }

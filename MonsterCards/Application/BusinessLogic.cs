@@ -66,7 +66,8 @@ namespace MonsterCards.Application
 
 
 
-
+            //playerA.deck.Add(playerB.deck[3]);
+            //playerB.deck.Remove(playerB.deck[3]);
 
             playerA.battle(ref playerA, ref playerB);
 

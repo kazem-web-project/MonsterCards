@@ -62,28 +62,42 @@ namespace MonsterCards.Domain.Entities
         public bool battle(ref User myUser,ref User userOpponent)
         {
 
+            List<Card> playedCards = new List<Card>();
 
+            while (playedCards.Count <= 8)
+            { // water spell 5 has problem
+                int myUserRandNum = rnd.Next(0, myUser.deck.Count );
+                int userOpponentRandNum = rnd.Next(0, userOpponent.deck.Count );
+                if (playedCards.Contains(myUser.deck[myUserRandNum]) || playedCards.Contains(userOpponent.deck[userOpponentRandNum])) continue;
+                playedCards.Add(myUser.deck[myUserRandNum]);
+                playedCards.Add(userOpponent.deck[userOpponentRandNum]);
+                battleTwoCards(myUser.deck[myUserRandNum], userOpponent.deck[userOpponentRandNum], myUser.deck, userOpponent.deck);
 
-            for (int i = 0; i < myUser.deck.Count; i++)
-            {
-                var randNumsUsed = new List<int>(4) { 0,1,2,3};
-                for (int j = 0; j < userOpponent.deck.Count; j++)
-                {
-                    if (randNumsUsed.Count==0){ return true; }
-                    int randNum;
-                    do
-                    {
-                        randNum = rnd.Next(0, 4);
-                        if(randNumsUsed.Contains(randNum)){
-                            randNumsUsed.Remove(randNum);
-                            break;
-                        }
-                    } while (true);
-                    //randNumsUsed.Add(randNum);
-                    //battleTwoCards(myUser.deck[i], userOpponent.deck[randNum], ref myUserDeck, ref userOpponentDeck);
-                    battleTwoCards(myUser.deck[i], userOpponent.deck[randNum], myUser.deck,  userOpponent.deck);
-                }
             }
+
+            //for (int i = 0; i < myUser.deck.Count; i++)
+            //{
+            //    var randNumsUsed = new List<int>(4) { 0,1,2,3};
+            //    for (int j = 0; j < userOpponent.deck.Count; j++)
+            //    {
+            //        if (randNumsUsed.Count==0){ return true; }
+            //        int randNum;
+            //        do
+            //        {
+            //            randNum = rnd.Next(0, 4);
+            //            if(randNumsUsed.Contains(randNum)){
+            //                randNumsUsed.Remove(randNum);
+            //                break;
+            //            }
+            //        } while (true);
+            //        //randNumsUsed.Add(randNum);
+            //        //battleTwoCards(myUser.deck[i], userOpponent.deck[randNum], ref myUserDeck, ref userOpponentDeck);
+            //        if(randNum < myUser.deck.Count)
+            //        {
+                        
+            //        }
+            //    }
+            //}
             // myUser.deck.Clear();
             //myUser.deck.AddRange(myUserDeck.cardsDeck);
 
@@ -182,11 +196,14 @@ namespace MonsterCards.Domain.Entities
             if (userDamege > opponentDamage)
             {
                 myUserDeck.Add(winerCard);
+                OpponentDeck.Remove(winerCard);
                 // OpponentDeck.Remove(lostCard);
+                Console.WriteLine("done!");
             }
             else if (userDamege < opponentDamage)
             {
                 OpponentDeck.Add(lostCard);
+                myUserDeck.Remove(lostCard);
             }
             return;
         }
@@ -194,11 +211,35 @@ namespace MonsterCards.Domain.Entities
         {
             if (card1.Damage > card2.Damage)
             {
-                myUserDeck.Add(card1);
+                if(myUserDeck.Contains(card1) && OpponentDeck.Contains(card2))
+                {
+                    myUserDeck.Add(card2);
+                    for (int i = 0; i < OpponentDeck.Count; i++)
+                    {
+                        if (card2 == OpponentDeck[i])
+                        {
+                            OpponentDeck.Remove(OpponentDeck[i]);
+                        }
+                    }
+                }else if (OpponentDeck.Contains(card1) && myUserDeck.Contains(card2))
+                {
+                    OpponentDeck.Add(card1);
+                    for (int i = 0; i < myUserDeck.Count; i++)
+                    {
+                        if (card1 == myUserDeck[i])
+                        {
+                            myUserDeck.Remove(myUserDeck[i]);
+                        }
+                    }
+
+                }
+                // foreach (Card myCard in OpponentDeck)
+                
             }
             else if (card1.Damage < card2.Damage)
             {
                 OpponentDeck.Add(card2);
+                myUserDeck.Remove(card2);
             }
 
         }
