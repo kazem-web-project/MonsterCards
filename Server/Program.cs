@@ -12,7 +12,7 @@ namespace SWEN1_Server_HelloWorld
             Console.WriteLine("Our first simplte HTTP-Server");
 
             //Creates Server on Port 8080, loopback for localhost
-            var httpServer = new TcpListener(IPAddress.Loopback, 10001);
+            var httpServer = new TcpListener(IPAddress.Loopback, 10001); 
             httpServer.Start();
 
             while (true)
