@@ -6,13 +6,17 @@ using MonsterCards.Domain.Interfaces;
 using System;
 using System.IO.IsolatedStorage;
 using System.Linq.Expressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Xml.Linq;
+using System.Numerics;
+using System.Collections.Generic;
 
 namespace MonsterCards.Domain.Entities
 {
     internal class User : ILoginable,
                     IRegistrable, IAcquireable, ICompareable,
                     IBattleable, ITradable, IBattleResultReceivable,
-                    IPlayable, ICardExchangable
+                    IPlayable, ICardExchangable, Ilogable
     { 
 
         const int winstatvalue = 3;
@@ -64,15 +68,16 @@ namespace MonsterCards.Domain.Entities
 
             List<Card> playedCards = new List<Card>();
 
-            while (playedCards.Count <= 8)
+            while (playedCards.Count < 2)//8)
             { // water spell 5 has problem
                 int myUserRandNum = rnd.Next(0, myUser.deck.Count );
                 int userOpponentRandNum = rnd.Next(0, userOpponent.deck.Count );
                 if (playedCards.Contains(myUser.deck[myUserRandNum]) || playedCards.Contains(userOpponent.deck[userOpponentRandNum])) continue;
                 playedCards.Add(myUser.deck[myUserRandNum]);
                 playedCards.Add(userOpponent.deck[userOpponentRandNum]);
+                Console.WriteLine(myUser.ToString() + " plays against" + userOpponent.ToString() + ":");
+                Console.WriteLine(myUser.deck[myUserRandNum].ToString() + " Card is agaist " + userOpponent.deck[userOpponentRandNum].ToString() + "!");
                 battleTwoCards(myUser.deck[myUserRandNum], userOpponent.deck[userOpponentRandNum], myUser.deck, userOpponent.deck);
-
             }
 
             //for (int i = 0; i < myUser.deck.Count; i++)
@@ -107,7 +112,12 @@ namespace MonsterCards.Domain.Entities
             return true;
         }
         public void battleTwoCards(Card myCard, Card cardOpponent, List<Card> myUserDeck, List<Card> opponentDeck)
-        {
+        {                
+            if(myCard is not SpellCard && cardOpponent is SpellCard)
+            {                
+                battleTwoCards(cardOpponent, myCard, opponentDeck, myUserDeck);
+                return;
+            }
             if (myCard is SpellCard)
             {
                 
@@ -160,7 +170,9 @@ namespace MonsterCards.Domain.Entities
                                 break;
                             case ElementType.WATER:
                                 // NORMAL IS THE WINNER
-                                battleNoEffective(myCard, cardOpponent,  myUserDeck, opponentDeck);
+                                battleEffective(cardOpponent, myCard , opponentDeck,myUserDeck );
+
+                                // battleNoEffective(myCard, cardOpponent,  myUserDeck, opponentDeck);
 
                                 break;
 
@@ -180,32 +192,36 @@ namespace MonsterCards.Domain.Entities
 
         }
 
-        public int battleEffectiveDamage( Card myCard)
+        public int battleEffectiveDamage( int myCardDamage)
         {
-            return myCard.Damage *= 2;
+            return myCardDamage *= 2;
         }
-        public int battleNotEffectiveDamage( Card myCard)
+        public int battleNotEffectiveDamage( int myCardDamage)
         {
-            return myCard.Damage /= 2;
+            return myCardDamage /= 2;
         }
         public void battleEffective(Card winerCard, Card lostCard, List<Card> myUserDeck, List<Card> OpponentDeck)
             // (Card winerCard, Card lostCard, List<Card> myUserDeck, List<Card> OpponentDeck)
         {
-            int userDamege = battleEffectiveDamage(lostCard);
-            int opponentDamage = battleNotEffectiveDamage(winerCard);
+            int userDamege = battleEffectiveDamage(lostCard.Damage);
+            int opponentDamage = battleNotEffectiveDamage(winerCard.Damage);
             if (userDamege > opponentDamage)
             {
-                myUserDeck.Add(winerCard);
-                OpponentDeck.Remove(winerCard);
+                Log(">>>>>>" +  lostCard.Name + " with damage: " + userDamege+ " Has won " + winerCard.Name + " with damage: " + opponentDamage +  "<<<<<<<");
+                OpponentDeck.Add(winerCard);
+                myUserDeck.Remove(winerCard);
                 // OpponentDeck.Remove(lostCard);
-                Console.WriteLine("done!");
+                // Console.WriteLine("done!");
             }
             else if (userDamege < opponentDamage)
             {
-                OpponentDeck.Add(lostCard);
-                myUserDeck.Remove(lostCard);
+                // Log(">>>>>>" + winerCard.Name + " Has won " + lostCard.Name + "<<<<<<<");
+                Log(">>>>>>" + winerCard.Name + " with damage: " + opponentDamage  + " Has won " + lostCard.Name + " with damage: " + userDamege + "<<<<<<<");
+
+                myUserDeck.Add(lostCard);
+                OpponentDeck.Remove(lostCard);
+
             }
-            return;
         }
         public void battleNoEffective(Card card1, Card card2, List<Card> myUserDeck, List<Card> OpponentDeck)            
         {
@@ -218,7 +234,9 @@ namespace MonsterCards.Domain.Entities
                     {
                         if (card2 == OpponentDeck[i])
                         {
+                            Log(">>>>>>" +  card1.Name + " with damage: " + card1.Damage+ " Has won " + OpponentDeck[i].Name +" with damage: " + OpponentDeck[i].Damage + "<<<<<<<");
                             OpponentDeck.Remove(OpponentDeck[i]);
+
                         }
                     }
                 }else if (OpponentDeck.Contains(card1) && myUserDeck.Contains(card2))
@@ -228,7 +246,9 @@ namespace MonsterCards.Domain.Entities
                     {
                         if (card1 == myUserDeck[i])
                         {
+                            Log(">>>>>>" +  card1.ToString() + " Has won " + myUserDeck[i].ToString() + "<<<<<<<");
                             myUserDeck.Remove(myUserDeck[i]);
+
                         }
                     }
 
@@ -238,8 +258,12 @@ namespace MonsterCards.Domain.Entities
             }
             else if (card1.Damage < card2.Damage)
             {
-                OpponentDeck.Add(card2);
-                myUserDeck.Remove(card2);
+                OpponentDeck.Add(card1);
+                myUserDeck.Remove(card1);
+            }
+            else
+            {
+                Log(">>>>>>" + card1.Name +" with damage: "+ card1.Damage + " draws " + card2.Name + " with damage: "+ card2.Damage+ "<<<<<<<");                
             }
 
         }
@@ -272,9 +296,14 @@ namespace MonsterCards.Domain.Entities
         {
             throw new NotImplementedException();
         }
+        public override string ToString()
+        {
+            return this.name + " ";
+        }
 
-
-
-
+        public void Log(string message)
+        {
+            Console.WriteLine(message);
+        }
     }
 }

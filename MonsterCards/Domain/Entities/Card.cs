@@ -24,5 +24,15 @@ namespace MonsterCards.Domain.Entities
                    Damage == card.Damage &&
                    ElementType == card.ElementType;
         }
+
+        public override int GetHashCode()
+        {
+            return this.ToString().GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return "Card Name: " + this.Name + " Damage: " +this.Damage + " Element type: "+ this.ElementType ;
+        }
     }
 }
