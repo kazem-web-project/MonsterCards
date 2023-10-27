@@ -11,6 +11,7 @@ using System.Xml.Linq;
 using System.Numerics;
 using System.Collections.Generic;
 
+
 namespace MonsterCards.Domain.Entities
 {
     internal class User : ILoginable,
@@ -23,7 +24,16 @@ namespace MonsterCards.Domain.Entities
         const int lossstatvalue = 0;
         const int startingstatvalue = 100;
 
-        
+        public User()
+        {
+
+            deck = new List<Card>();
+            this.stat = 100;
+            this.name = "Test User";
+            isregistered = true;
+            
+
+        }
 
         public User(int stat, string name)
         {
