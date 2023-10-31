@@ -1,6 +1,6 @@
-﻿using MonsterCards.Domain.Enums;
+﻿using MonsterCards.Domain.Enums.MTCG;
 
-namespace MonsterCards.Domain.Entities
+namespace MonsterCards.Domain.Entities.MTCG
 
 {
 
@@ -27,12 +27,12 @@ namespace MonsterCards.Domain.Entities
 
         public override int GetHashCode()
         {
-            return this.ToString().GetHashCode();
+            return ToString().GetHashCode();
         }
 
         public override string ToString()
         {
-            return "Card Name: " + this.Name + " Damage: " +this.Damage + " Element type: "+ this.ElementType ;
+            return "Card Name: " + Name + " Damage: " + Damage + " Element type: " + ElementType;
         }
     }
 }

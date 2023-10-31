@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Entities
+namespace MonsterCards.Domain.Entities.Server
 {
    
     public class HttpResponse

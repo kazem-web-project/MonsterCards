@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Enums
+namespace MonsterCards.Domain.Interfaces.MTCG
 {
-    public enum HttpMethod
+    internal interface ICompareable
     {
-        GET,
-        POST,
-        PUT,
-        DELETE,
+        public string compare();
     }
 }

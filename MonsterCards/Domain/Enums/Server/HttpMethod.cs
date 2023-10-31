@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MonsterCards.Domain.Enums
+namespace MonsterCards.Domain.Enums.Server
 {
-    public enum ElementType
+    public enum HttpMethod
     {
-        WATER,
-        FIRE,
-        NORMAL
+        GET,
+        POST,
+        PUT,
+        DELETE,
     }
 }

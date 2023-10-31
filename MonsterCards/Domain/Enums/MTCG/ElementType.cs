@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MonsterCards.Domain.Interfaces
+namespace MonsterCards.Domain.Enums.MTCG
 {
-    internal interface Ilogable
+    public enum ElementType
     {
-        public void Log(string message);
+        WATER,
+        FIRE,
+        NORMAL
     }
 }

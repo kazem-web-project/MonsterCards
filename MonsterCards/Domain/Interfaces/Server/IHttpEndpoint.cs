@@ -1,13 +1,13 @@
-﻿using Server.Entities;
+﻿using MonsterCards.Domain.Entities.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Interface
+namespace MonsterCards.Domain.Interfaces.Server
 {
-    internal interface IHttpEndpoint
+    public interface IHttpEndpoint
     {
         bool HandleRequest(HttpRequest rq, HttpResponse rs);
     }

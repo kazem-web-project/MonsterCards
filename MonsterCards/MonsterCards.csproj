@@ -8,10 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\Exceptions\" />
+    <Folder Include="Domain\Exceptions\MTCG\" />
+    <Folder Include="Domain\Exceptions\Server\" />
     <Folder Include="Infrastructure\Files\" />
-    <Folder Include="Infrastructure\Persistance\" />
-    <Folder Include="UI\" />
+    <Folder Include="Infrastructure\Server\" />
+    <Folder Include="UI\Server\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Npgsql" Version="7.0.6" />
   </ItemGroup>
 
 </Project>

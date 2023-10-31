@@ -1,4 +1,5 @@
-﻿using Server.Interface;
+﻿using MonsterCards.Domain.Entities.MTCG;
+using MonsterCards.Domain.Interfaces.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,10 +7,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using MonsterCards.Domain.Entities.MTCG;
 
-namespace Server.Entities
+namespace MonsterCards.Domain.Entities.Server
 {
-    internal class HttpServer
+    public class HttpServer
     {
         private readonly int port = 10001;
         private readonly IPAddress ip = IPAddress.Loopback;
@@ -21,6 +23,7 @@ namespace Server.Entities
             this.ip = ip;
 
             tcpListener = new TcpListener(ip, port);
+            RegisterEndpoint("users", new User());
         }
 
         public void Run()

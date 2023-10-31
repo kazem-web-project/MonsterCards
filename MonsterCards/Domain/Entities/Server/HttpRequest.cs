@@ -1,8 +1,8 @@
-﻿using Server.Enums;
+﻿using MonsterCards.Domain.Enums.Server;
 using System.Text;
-using HttpMethod = Server.Enums.HttpMethod;
+using HttpMethod = MonsterCards.Domain.Enums.Server.HttpMethod;
 
-namespace Server.Entities
+namespace MonsterCards.Domain.Entities.Server
 {
     public class HttpRequest
     {
@@ -83,5 +83,17 @@ namespace Server.Entities
                 Console.WriteLine(data.ToString());
             }
         }
+        public override string ToString()
+        {
+            
+            string myHeader = ">>>>>>Start of headers:\n";
+            foreach (var header in Headers)
+            {
+                myHeader += header.Key.ToString() + ": ";
+                myHeader += header.Value.ToString() +"\n";
+            }
+            myHeader+= "\n<<<<<End of Headers!\r\n";
+            return "--------Mehod: "+ this.Method.ToString() + "\tPaht: " + this.Path[1] + " \nheader :\n" +myHeader+ "\n Content: " +  this.Content + "\n" ;
+        } 
     }
 }

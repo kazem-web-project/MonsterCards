@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MonsterCards.Domain.Interfaces
+namespace MonsterCards.Domain.Interfaces.MTCG
 {
     internal interface IBattleResultReceivable
     {

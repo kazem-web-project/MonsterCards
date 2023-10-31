@@ -1,23 +1,21 @@
-﻿
-
-
-using MonsterCards.Domain.Enums;
-using MonsterCards.Domain.Interfaces;
-using System;
+﻿using System;
 using System.IO.IsolatedStorage;
 using System.Linq.Expressions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Xml.Linq;
 using System.Numerics;
 using System.Collections.Generic;
+using MonsterCards.Domain.Interfaces.MTCG;
+using MonsterCards.Domain.Enums.MTCG;
+using MonsterCards.Domain.Interfaces.Server;
+using MonsterCards.Domain.Entities.Server;
 
-
-namespace MonsterCards.Domain.Entities
+namespace MonsterCards.Domain.Entities.MTCG
 {
     internal class User : ILoginable,
                     IRegistrable, IAcquireable, ICompareable,
                     IBattleable, ITradable, IBattleResultReceivable,
-                    IPlayable, ICardExchangable, Ilogable
+                    IPlayable, ICardExchangable, Ilogable, IHttpEndpoint
     { 
 
         const int winstatvalue = 3;
@@ -30,8 +28,7 @@ namespace MonsterCards.Domain.Entities
             deck = new List<Card>();
             this.stat = 100;
             this.name = "Test User";
-            isregistered = true;
-            
+            isregistered = true;           
 
         }
 
@@ -314,6 +311,14 @@ namespace MonsterCards.Domain.Entities
         public void Log(string message)
         {
             Console.WriteLine(message);
+        }
+
+        public bool HandleRequest(HttpRequest rq, HttpResponse rs)
+        {
+            Console.WriteLine(rq);
+            Console.WriteLine("inside user handle");
+            throw new NotImplementedException();
+
         }
     }
 }

@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace Server.Entities
+namespace MonsterCards.Domain.Entities.Server
 {
-    internal class HttpProcessor
+    public class HttpProcessor
     {
         private TcpClient clientSocket;
         private HttpServer httpServer;
@@ -36,6 +36,10 @@ namespace Server.Entities
                 rs.ResponseMessage = "Not Found";
                 rs.Content = "<html><body>Not found!</body></html>";
                 rs.Headers.Add("Content-Type", "text/html");
+            }
+            else
+            {
+
             }
 
 

@@ -1,9 +1,10 @@
-﻿using Server.Entities;
+﻿
 using System;
 using System.Linq.Expressions;
 using System.Net;
-using Server.Entities;
-using MonsterCards.Domain.Entities;
+using MonsterCards.Domain.Entities.Server;
+
+
 namespace Program
 {
     internal class Program
@@ -12,6 +13,7 @@ namespace Program
         {
             // continue; f
             HttpServer httpServer = new HttpServer(IPAddress.Any, 10001);
+            Console.WriteLine("Running new Server.");
             // httpServer.RegisterEndpoint("users", new User());
             httpServer.Run();
         }

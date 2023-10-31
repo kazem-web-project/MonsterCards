@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MonsterCards.Domain.Interfaces
+namespace MonsterCards.Domain.Interfaces.MTCG
 {
-    internal interface ICompareable
+    internal interface Ilogable
     {
-        public string compare();
+        public void Log(string message);
     }
 }

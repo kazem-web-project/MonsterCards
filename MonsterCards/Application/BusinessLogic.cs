@@ -1,6 +1,7 @@
 ﻿using MonsterCards.Domain.Entities;
-using MonsterCards.Domain.Enums;
-
+using MonsterCards.Domain.Entities.MTCG;
+using MonsterCards.Domain.Enums.MTCG;
+using MonsterCards.Domain.Interfaces;
 namespace MonsterCards.Application
 {
     public static class BusinessLogic

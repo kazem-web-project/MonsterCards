@@ -1,18 +1,18 @@
-﻿using MonsterCards.Domain.Entities;
+﻿using MonsterCards.Domain.Entities.MTCG;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MonsterCards.Domain.Interfaces
+namespace MonsterCards.Domain.Interfaces.MTCG
 {
     internal interface IPlayable
     {
-        public int coins { get; set; }       
+        public int coins { get; set; }
         public int stat { get; set; }
         public string name { get; set; }
-        public bool isregistered { get; set; }        
+        public bool isregistered { get; set; }
         public List<Card> stack { get; set; }
         public List<Card> deck { get; set; }
     }
