@@ -1,4 +1,5 @@
-﻿using MonsterCards.Domain.Entities.Server;
+﻿using MonsterCards.Application;
+using MonsterCards.Domain.Entities.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,12 @@ namespace MonsterCards.Domain.Server
     {
         private TcpClient clientSocket;
         private HttpServer httpServer;
-
+        //  public Battle battleGame{ get; set; }
         public HttpProcessor(HttpServer httpServer, TcpClient clientSocket)
         {
             this.httpServer = httpServer;
             this.clientSocket = clientSocket;
+            
         }
 
         public void Process()
@@ -38,8 +40,40 @@ namespace MonsterCards.Domain.Server
                 rs.Content = "<html><body>Not found!</body></html>";
                 rs.Headers.Add("Content-Type", "text/html");
             }
-            else
+            
+            else 
             {
+                if (rs.ResponseCode== 300)
+                {                                       
+                    rs.Content = "<html><body>" + rs.ResponseMessage + "</body></html>";
+                    rs.Headers.Add("Content-Type", "text/html");
+
+                }else if (rs.ResponseCode== 410)
+                {
+                    rs.Content = "<html><body>" + rs.ResponseMessage + "</body></html>";
+                    rs.Headers.Add("Content-Type", "text/html");
+                }
+                else if (rs.ResponseCode == 200) 
+                {
+                    rs.Content = "<html><body>" + rs.ResponseMessage + "</body></html>";
+                    rs.Headers.Add("Content-Type", "text/html");
+                }
+                else if (rs.ResponseCode == 413)
+                {
+                    rs.Content = "<html><body>" + rs.ResponseMessage + "</body></html>";
+                    rs.Headers.Add("Content-Type", "text/html");
+                }
+                else if (rs.ResponseCode == 411)
+                {
+                    rs.Content = "<html><body>" + rs.ResponseMessage + "</body></html>";
+                    rs.Headers.Add("Content-Type", "text/html");
+                }
+                else if (rs.ResponseCode == 414)
+                {
+                    rs.Content = "<html><body>" + rs.ResponseMessage + "</body></html>";
+                    rs.Headers.Add("Content-Type", "text/html");
+                }
+                
 
             }
 

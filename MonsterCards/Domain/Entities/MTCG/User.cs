@@ -9,6 +9,8 @@ using MonsterCards.Domain.Interfaces.MTCG;
 using MonsterCards.Domain.Enums.MTCG;
 using MonsterCards.Domain.Interfaces.Server;
 using MonsterCards.Domain.Entities.Server;
+using System.Text.Json;
+using MonsterCards.Infrastructure.Persistance;
 
 namespace MonsterCards.Domain.Entities.MTCG
 {
@@ -21,6 +23,7 @@ namespace MonsterCards.Domain.Entities.MTCG
         const int winstatvalue = 3;
         const int lossstatvalue = 0;
         const int startingstatvalue = 100;
+        
 
         public User()
         {
@@ -28,18 +31,18 @@ namespace MonsterCards.Domain.Entities.MTCG
             deck = new List<Card>();
             this.stat = 100;
             this.name = "Test User";
-            isregistered = true;           
-
+            isregistered = true;
+            
         }
 
-        public User(int stat, string name)
+        public User(int stat, string name, int user_id)
         {
 
             deck = new List<Card>();
             this.stat = stat;
             this.name = name;
             isregistered = true;
-            
+            this.user_id = user_id;
         }
 
         public User(List<Card> stack, int stat, string name)
@@ -59,6 +62,7 @@ namespace MonsterCards.Domain.Entities.MTCG
         public bool isregistered { get ; set; }
         public List<Card> stack { get; set; } = new List<Card>();
         public List<Card> deck { get; set; } = new List<Card>();
+        public int user_id { get ; set ; }
 
         public bool acceptTradeOffer(Card cardToAccept)
         {
@@ -70,13 +74,13 @@ namespace MonsterCards.Domain.Entities.MTCG
             throw new NotImplementedException();
         }
 
-        public bool battle(ref User myUser,ref User userOpponent)
+        public bool battle( User myUser,User userOpponent)
         {
-
             List<Card> playedCards = new List<Card>();
 
             while (playedCards.Count < 2)//8)
-            { // water spell 5 has problem
+            { // water
+              // 5 has problem
                 int myUserRandNum = rnd.Next(0, myUser.deck.Count );
                 int userOpponentRandNum = rnd.Next(0, userOpponent.deck.Count );
                 if (playedCards.Contains(myUser.deck[myUserRandNum]) || playedCards.Contains(userOpponent.deck[userOpponentRandNum])) continue;
@@ -315,10 +319,62 @@ namespace MonsterCards.Domain.Entities.MTCG
 
         public bool HandleRequest(HttpRequest rq, HttpResponse rs)
         {
+
+
+            if (rq.Method.ToString() == "POST")
+            {
+                Credential? credentialToCheck =
+                    JsonSerializer.Deserialize<Credential>(rq.Content);
+                CredentialRepository credentialRepo = new CredentialRepository("Host=localhost;Database=mydb;Username=postgres;Password=postgres;Persist Security Info=True");
+                int new_user_id = credentialRepo.Add(credentialToCheck, rs);
+                if (new_user_id > 0)
+                {
+                    Console.WriteLine("New user created with the id: " + credentialToCheck);
+                }
+                else
+                {
+                    Console.WriteLine("Could not create new user!");
+                }
+            }
+            else if (rq.Method.ToString() == "PUT")
+            {
+                // implement /users/...
+                Credential? credentialToCheck =
+                    JsonSerializer.Deserialize<Credential>(rq.Content);
+                CredentialRepository credentialRepo = new CredentialRepository("Host=localhost;Database=mydb;Username=postgres;Password=postgres;Persist Security Info=True");
+
+
+                int new_user_id = credentialRepo.Update(credentialToCheck, rs);
+                if (new_user_id > 0)
+                {
+                    Console.WriteLine("The user with the id: " + credentialToCheck + " changed his password with the id: ");
+                }
+                else
+                {
+                    Console.WriteLine("Could not edit the user password!");
+                }
+
+            }
+
+            //Console.WriteLine(rq);
+            // Console.WriteLine("inside user handle");
+            //throw new NotImplementedException();
+            return true;
             Console.WriteLine(rq);
             Console.WriteLine("inside user handle");
             throw new NotImplementedException();
 
+        }
+
+        public void loadDeckCardsFromStack()
+        {
+            this.deck.Clear();
+            for (int i = 0; i < 20; i++)
+            {
+                if (i >= this.stack.Count - 1) return;
+                this.deck.Add(this.stack.ElementAt(i));
+            }
+            
         }
     }
 }
