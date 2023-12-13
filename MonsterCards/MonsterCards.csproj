@@ -9,16 +9,17 @@
 
   <ItemGroup>
     <Compile Remove="Domain\Exceptions\**" />
+    <Compile Remove="Infrastructure\Files\**" />
+    <Compile Remove="Infrastructure\Server\**" />
     <Compile Remove="UI\**" />
     <EmbeddedResource Remove="Domain\Exceptions\**" />
+    <EmbeddedResource Remove="Infrastructure\Files\**" />
+    <EmbeddedResource Remove="Infrastructure\Server\**" />
     <EmbeddedResource Remove="UI\**" />
     <None Remove="Domain\Exceptions\**" />
+    <None Remove="Infrastructure\Files\**" />
+    <None Remove="Infrastructure\Server\**" />
     <None Remove="UI\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Infrastructure\Files\" />
-    <Folder Include="Infrastructure\Server\" />
   </ItemGroup>
 
   <ItemGroup>
