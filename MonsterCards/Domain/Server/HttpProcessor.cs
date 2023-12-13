@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MonsterCards.Domain.Entities.Server;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -6,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace MonsterCards.Domain.Entities.Server
+namespace MonsterCards.Domain.Server
 {
     public class HttpProcessor
     {

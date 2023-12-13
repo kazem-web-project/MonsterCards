@@ -8,11 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\Exceptions\MTCG\" />
-    <Folder Include="Domain\Exceptions\Server\" />
+    <Compile Remove="Domain\Exceptions\**" />
+    <Compile Remove="UI\**" />
+    <EmbeddedResource Remove="Domain\Exceptions\**" />
+    <EmbeddedResource Remove="UI\**" />
+    <None Remove="Domain\Exceptions\**" />
+    <None Remove="UI\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Infrastructure\Files\" />
     <Folder Include="Infrastructure\Server\" />
-    <Folder Include="UI\Server\" />
   </ItemGroup>
 
   <ItemGroup>

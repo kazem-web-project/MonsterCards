@@ -1,13 +1,9 @@
 ﻿using MonsterCards.Domain.Entities.MTCG;
 using MonsterCards.Domain.Interfaces.Server;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using MonsterCards.Domain.Server;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using MonsterCards.Domain.Entities.MTCG;
+
 
 namespace MonsterCards.Domain.Entities.Server
 {
