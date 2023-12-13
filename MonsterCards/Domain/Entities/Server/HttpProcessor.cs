@@ -1,11 +1,8 @@
-﻿using MonsterCards.Domain.Entities.MTCG;
-using MonsterCards.Infrastructure.Persistance;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 
@@ -32,8 +29,6 @@ namespace MonsterCards.Domain.Entities.Server
             var rs = new HttpResponse(writer);
             
             var endpoint = httpServer.Endpoints.ContainsKey(rq.Path[1]) ? httpServer.Endpoints[rq.Path[1]] : null;
-            
-            
             if (endpoint == null || !endpoint.HandleRequest(rq, rs))
             {
                 //Thread.Sleep(10000);
@@ -46,7 +41,7 @@ namespace MonsterCards.Domain.Entities.Server
             {
 
             }
-            
+
 
 
             Console.WriteLine("----------------------------------------");

@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Folder Include="Domain\Exceptions\MTCG\" />
+    <Folder Include="Domain\Exceptions\Server\" />
     <Folder Include="Infrastructure\Files\" />
     <Folder Include="Infrastructure\Server\" />
     <Folder Include="UI\Server\" />

@@ -9,8 +9,6 @@ using MonsterCards.Domain.Interfaces.MTCG;
 using MonsterCards.Domain.Enums.MTCG;
 using MonsterCards.Domain.Interfaces.Server;
 using MonsterCards.Domain.Entities.Server;
-using MonsterCards.Infrastructure.Persistance;
-using System.Text.Json;
 
 namespace MonsterCards.Domain.Entities.MTCG
 {
@@ -18,7 +16,7 @@ namespace MonsterCards.Domain.Entities.MTCG
                     IRegistrable, IAcquireable, ICompareable,
                     IBattleable, ITradable, IBattleResultReceivable,
                     IPlayable, ICardExchangable, Ilogable, IHttpEndpoint
-    {
+    { 
 
         const int winstatvalue = 3;
         const int lossstatvalue = 0;
@@ -30,7 +28,7 @@ namespace MonsterCards.Domain.Entities.MTCG
             deck = new List<Card>();
             this.stat = 100;
             this.name = "Test User";
-            isregistered = true;
+            isregistered = true;           
 
         }
 
@@ -41,24 +39,24 @@ namespace MonsterCards.Domain.Entities.MTCG
             this.stat = stat;
             this.name = name;
             isregistered = true;
-
+            
         }
 
         public User(List<Card> stack, int stat, string name)
         {
-
+            
             this.stack = stack;
             this.stat = stat;
             this.name = name;
             isregistered = true;
-
+            
         }
         private Random rnd = new Random();
         public Credential UserCredential { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public int coins { get; set; }
-        public int stat { get; set; }
+        public int coins { get; set ; }
+        public int stat { get ; set ; }
         public string name { get; set; }
-        public bool isregistered { get; set; }
+        public bool isregistered { get ; set; }
         public List<Card> stack { get; set; } = new List<Card>();
         public List<Card> deck { get; set; } = new List<Card>();
 
@@ -72,15 +70,15 @@ namespace MonsterCards.Domain.Entities.MTCG
             throw new NotImplementedException();
         }
 
-        public bool battle(ref User myUser, ref User userOpponent)
+        public bool battle(ref User myUser,ref User userOpponent)
         {
 
             List<Card> playedCards = new List<Card>();
 
             while (playedCards.Count < 2)//8)
             { // water spell 5 has problem
-                int myUserRandNum = rnd.Next(0, myUser.deck.Count);
-                int userOpponentRandNum = rnd.Next(0, userOpponent.deck.Count);
+                int myUserRandNum = rnd.Next(0, myUser.deck.Count );
+                int userOpponentRandNum = rnd.Next(0, userOpponent.deck.Count );
                 if (playedCards.Contains(myUser.deck[myUserRandNum]) || playedCards.Contains(userOpponent.deck[userOpponentRandNum])) continue;
                 playedCards.Add(myUser.deck[myUserRandNum]);
                 playedCards.Add(userOpponent.deck[userOpponentRandNum]);
@@ -108,7 +106,7 @@ namespace MonsterCards.Domain.Entities.MTCG
             //        //battleTwoCards(myUser.deck[i], userOpponent.deck[randNum], ref myUserDeck, ref userOpponentDeck);
             //        if(randNum < myUser.deck.Count)
             //        {
-
+                        
             //        }
             //    }
             //}
@@ -117,19 +115,19 @@ namespace MonsterCards.Domain.Entities.MTCG
 
             // userOpponent.deck.Clear();
             //userOpponent.deck.AddRange(userOpponentDeck.cardsDeck);
-
+            
             return true;
         }
         public void battleTwoCards(Card myCard, Card cardOpponent, List<Card> myUserDeck, List<Card> opponentDeck)
-        {
-            if (myCard is not SpellCard && cardOpponent is SpellCard)
-            {
+        {                
+            if(myCard is not SpellCard && cardOpponent is SpellCard)
+            {                
                 battleTwoCards(cardOpponent, myCard, opponentDeck, myUserDeck);
                 return;
             }
             if (myCard is SpellCard)
             {
-
+                
                 switch (myCard.ElementType)
                 {
                     case ElementType.FIRE:
@@ -144,7 +142,7 @@ namespace MonsterCards.Domain.Entities.MTCG
                                 // NORMAL IS THE WINNER
                                 battleEffective(cardOpponent, myCard, myUserDeck, opponentDeck);
                                 break;
-
+                                
                             default:
                                 battleNoEffective(myCard, cardOpponent, myUserDeck, opponentDeck);
                                 break;
@@ -156,17 +154,17 @@ namespace MonsterCards.Domain.Entities.MTCG
                         {
                             case ElementType.FIRE:
                                 // WATER IS THE WINNER
-                                battleNoEffective(myCard, cardOpponent, myUserDeck, opponentDeck);
+                                battleNoEffective(myCard, cardOpponent,  myUserDeck,  opponentDeck);
 
                                 //battleEffective(userCard, opponentCard, ref myUserDeck, ref OpponentDeck);
                                 break;
                             case ElementType.NORMAL:
                                 // NORMAL IS THE WINNER
-                                battleEffective(cardOpponent, myCard, myUserDeck, opponentDeck);
+                                battleEffective(cardOpponent, myCard,  myUserDeck,  opponentDeck);
                                 break;
 
                             default:
-                                battleNoEffective(myCard, cardOpponent, myUserDeck, opponentDeck);
+                                battleNoEffective(myCard, cardOpponent,  myUserDeck,  opponentDeck);
                                 break;
                         }
                         break;
@@ -174,50 +172,49 @@ namespace MonsterCards.Domain.Entities.MTCG
                         switch (cardOpponent.ElementType)
                         {
                             case ElementType.FIRE:
-
-                                battleEffective(cardOpponent, myCard, myUserDeck, opponentDeck);
+                                
+                                battleEffective(cardOpponent, myCard,  myUserDeck, opponentDeck);
                                 break;
                             case ElementType.WATER:
                                 // NORMAL IS THE WINNER
-                                battleEffective(cardOpponent, myCard, opponentDeck, myUserDeck);
+                                battleEffective(cardOpponent, myCard , opponentDeck,myUserDeck );
 
                                 // battleNoEffective(myCard, cardOpponent,  myUserDeck, opponentDeck);
 
                                 break;
 
                             default:
-                                battleNoEffective(myCard, cardOpponent, myUserDeck, opponentDeck);
+                                battleNoEffective(myCard, cardOpponent,  myUserDeck, opponentDeck);
                                 break;
                         }
-                        break;
+                        break; 
                     default:
                         // code block
                         break;
                 }
-            }
-            else
+            } else
             {
                 battleNoEffective(myCard, cardOpponent, myUserDeck, opponentDeck);
             }
 
         }
 
-        public int battleEffectiveDamage(int myCardDamage)
+        public int battleEffectiveDamage( int myCardDamage)
         {
             return myCardDamage *= 2;
         }
-        public int battleNotEffectiveDamage(int myCardDamage)
+        public int battleNotEffectiveDamage( int myCardDamage)
         {
             return myCardDamage /= 2;
         }
         public void battleEffective(Card winerCard, Card lostCard, List<Card> myUserDeck, List<Card> OpponentDeck)
-        // (Card winerCard, Card lostCard, List<Card> myUserDeck, List<Card> OpponentDeck)
+            // (Card winerCard, Card lostCard, List<Card> myUserDeck, List<Card> OpponentDeck)
         {
             int userDamege = battleEffectiveDamage(lostCard.Damage);
             int opponentDamage = battleNotEffectiveDamage(winerCard.Damage);
             if (userDamege > opponentDamage)
             {
-                Log(">>>>>>" + lostCard.Name + " with damage: " + userDamege + " Has won " + winerCard.Name + " with damage: " + opponentDamage + "<<<<<<<");
+                Log(">>>>>>" +  lostCard.Name + " with damage: " + userDamege+ " Has won " + winerCard.Name + " with damage: " + opponentDamage +  "<<<<<<<");
                 OpponentDeck.Add(winerCard);
                 myUserDeck.Remove(winerCard);
                 // OpponentDeck.Remove(lostCard);
@@ -226,38 +223,37 @@ namespace MonsterCards.Domain.Entities.MTCG
             else if (userDamege < opponentDamage)
             {
                 // Log(">>>>>>" + winerCard.Name + " Has won " + lostCard.Name + "<<<<<<<");
-                Log(">>>>>>" + winerCard.Name + " with damage: " + opponentDamage + " Has won " + lostCard.Name + " with damage: " + userDamege + "<<<<<<<");
+                Log(">>>>>>" + winerCard.Name + " with damage: " + opponentDamage  + " Has won " + lostCard.Name + " with damage: " + userDamege + "<<<<<<<");
 
                 myUserDeck.Add(lostCard);
                 OpponentDeck.Remove(lostCard);
 
             }
         }
-        public void battleNoEffective(Card card1, Card card2, List<Card> myUserDeck, List<Card> OpponentDeck)
+        public void battleNoEffective(Card card1, Card card2, List<Card> myUserDeck, List<Card> OpponentDeck)            
         {
             if (card1.Damage > card2.Damage)
             {
-                if (myUserDeck.Contains(card1) && OpponentDeck.Contains(card2))
+                if(myUserDeck.Contains(card1) && OpponentDeck.Contains(card2))
                 {
                     myUserDeck.Add(card2);
                     for (int i = 0; i < OpponentDeck.Count; i++)
                     {
                         if (card2 == OpponentDeck[i])
                         {
-                            Log(">>>>>>" + card1.Name + " with damage: " + card1.Damage + " Has won " + OpponentDeck[i].Name + " with damage: " + OpponentDeck[i].Damage + "<<<<<<<");
+                            Log(">>>>>>" +  card1.Name + " with damage: " + card1.Damage+ " Has won " + OpponentDeck[i].Name +" with damage: " + OpponentDeck[i].Damage + "<<<<<<<");
                             OpponentDeck.Remove(OpponentDeck[i]);
 
                         }
                     }
-                }
-                else if (OpponentDeck.Contains(card1) && myUserDeck.Contains(card2))
+                }else if (OpponentDeck.Contains(card1) && myUserDeck.Contains(card2))
                 {
                     OpponentDeck.Add(card1);
                     for (int i = 0; i < myUserDeck.Count; i++)
                     {
                         if (card1 == myUserDeck[i])
                         {
-                            Log(">>>>>>" + card1.ToString() + " Has won " + myUserDeck[i].ToString() + "<<<<<<<");
+                            Log(">>>>>>" +  card1.ToString() + " Has won " + myUserDeck[i].ToString() + "<<<<<<<");
                             myUserDeck.Remove(myUserDeck[i]);
 
                         }
@@ -265,7 +261,7 @@ namespace MonsterCards.Domain.Entities.MTCG
 
                 }
                 // foreach (Card myCard in OpponentDeck)
-
+                
             }
             else if (card1.Damage < card2.Damage)
             {
@@ -274,7 +270,7 @@ namespace MonsterCards.Domain.Entities.MTCG
             }
             else
             {
-                Log(">>>>>>" + card1.Name + " with damage: " + card1.Damage + " draws " + card2.Name + " with damage: " + card2.Damage + "<<<<<<<");
+                Log(">>>>>>" + card1.Name +" with damage: "+ card1.Damage + " draws " + card2.Name + " with damage: "+ card2.Damage+ "<<<<<<<");                
             }
 
         }
@@ -319,47 +315,9 @@ namespace MonsterCards.Domain.Entities.MTCG
 
         public bool HandleRequest(HttpRequest rq, HttpResponse rs)
         {
-
-
-            if (rq.Method.ToString() == "POST")
-            {
-                Credential? credentialToCheck =
-                    JsonSerializer.Deserialize<Credential>(rq.Content);
-                CredentialRepository credentialRepo = new CredentialRepository("Host=localhost;Database=mydb;Username=postgres;Password=postgres;Persist Security Info=True");
-                int new_user_id = credentialRepo.Add(credentialToCheck);
-                if (new_user_id > 0)
-                {
-                    Console.WriteLine("New user created with the id: " + credentialToCheck);
-                }
-                else
-                {
-                    Console.WriteLine("Could not create new user!");
-                }
-            }
-            else if(rq.Method.ToString() == "PUT")
-            {
-                // implement /users/...
-                Credential? credentialToCheck =
-                    JsonSerializer.Deserialize<Credential>(rq.Content);
-                CredentialRepository credentialRepo = new CredentialRepository("Host=localhost;Database=mydb;Username=postgres;Password=postgres;Persist Security Info=True");
-               
-
-                int new_user_id = credentialRepo.Update(credentialToCheck, rq,rs);
-                if (new_user_id > 0)
-                {
-                    Console.WriteLine("The user with the id: " + credentialToCheck+ " changed his password with the id: ");
-                }
-                else
-                {
-                    Console.WriteLine("Could not edit the user password!");
-                }
-
-            }
-
-            //Console.WriteLine(rq);
-            // Console.WriteLine("inside user handle");
-            //throw new NotImplementedException();
-            return true;
+            Console.WriteLine(rq);
+            Console.WriteLine("inside user handle");
+            throw new NotImplementedException();
 
         }
     }

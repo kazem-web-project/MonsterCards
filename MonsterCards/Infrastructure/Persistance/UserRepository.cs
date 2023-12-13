@@ -20,37 +20,18 @@ namespace MonsterCards.Infrastructure.Persistance
 
         bool IUserRepository.Add(User user)
         {
-            
+            /*
             using IDbConnection connection = new NpgsqlConnection(connectionString);
             using IDbCommand command = connection.CreateCommand();
             connection.Open();
-            // insert into users ( name ,deck_id ,stat_id ,coins, credential_id) values ('test', 10,10,10, 10);
-            // command.CommandText = "INSERT INTO users ( name ,deck_id ,stat_id ,coins, credential_id) " +
-            //     "VALUES (@name, @deck_id, @stat_id, @coins, @credential_id) RETURNING id";
 
-            command.CommandText = "INSERT INTO users ( name ,deck_id ,stat_id ,coins, credential_id) " +
-                "VALUES (@name, @deck_id, @stat_id, @coins, @credential_id) RETURNING id";
-
-
-            AddParameterWithValue(command, "name", DbType.String, user.name);
-            //AddParameterWithValue(command, "deck_id", DbType.Int32, user.deck);
-            //AddParameterWithValue(command, "stat_id", DbType.Int32, user.deck);
-            AddParameterWithValue(command, "coins", DbType.Int32, 10);
-            AddParameterWithValue(command, "stat", DbType.Int32, 100);
-            // AddParameterWithValue(command, "credential_id", DbType.Int32, user.deck);
-            /*
-
-            AddParameterWithValue(command, "name", DbType.String, user.name);
-            AddParameterWithValue(command, "deck_id", DbType.Int32, user.deck);
-            AddParameterWithValue(command, "stat_id", DbType.Int32, user.deck);
-            AddParameterWithValue(command, "coins", DbType.Int32, user.deck);
-            AddParameterWithValue(command, "credential_id", DbType.Int32, user.deck);
+            command.CommandText = "INSERT INTO users (name, age, description) " +
+                "VALUES (@name, @age, @description) RETURNING id";
+            AddParameterWithValue(command, "name", DbType.String, person.Name);
+            AddParameterWithValue(command, "age", DbType.Int32, person.Age);
+            AddParameterWithValue(command, "description", DbType.String, person.Description);
+            person.Id = (int)(command.ExecuteScalar() ?? 0);
             */
-
-
-            // AddParameterWithValue(command, "description", DbType.String, person.Description);
-            //person.Id = (int)(command.ExecuteScalar() ?? 0);
-            
             return false;
         }
 
