@@ -1,3 +1,3 @@
 # MonsterCards
 
-This is my Project
+Please use Database setup.pdf to setup the database.
