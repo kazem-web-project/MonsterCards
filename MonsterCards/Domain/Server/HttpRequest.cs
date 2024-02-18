@@ -12,7 +12,7 @@ namespace MonsterCards.Domain.Entities.Server
         public string[] Path { get; set; } = new string[0];
         public string HttpVersion { get; set; } = "";
         public Dictionary<string, string> Headers { get; private set; } = new Dictionary<string, string>();
-        public Dictionary<string, string> QueryParams = new();
+        public Dictionary<string, string> QueryParams = new Dictionary<string, string>();
         public string? Content { get; private set; }
 
         public HttpRequest(StreamReader reader)
@@ -30,13 +30,15 @@ namespace MonsterCards.Domain.Entities.Server
             if(pathAndQuery.Length>1)
             {
                 string[]? queryParams = pathAndQuery?[1].Split('=');
-                foreach (var queryParam in QueryParams)
+                
+                // foreach (var queryParam in queryParams)
+                for (int i =0;i< queryParams.Length;i+=2)
                 {
-                    string[]? queryParamParts = queryParam.ToString().Split("=");
-                    if(queryParamParts.Length>=1)
+                    // string[]? queryParamParts = queryParams.ToString().Split("=");
+                    if(queryParams.Length>=1)
                     {
 
-                        QueryParams[queryParamParts[0]] = (queryParamParts?.Length == 2) ? queryParamParts[1] : "";
+                        QueryParams[queryParams[0]] = (queryParams?.Length == 2) ? queryParams[1] : "";
 
                     }
                 }

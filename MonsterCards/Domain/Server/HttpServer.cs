@@ -5,6 +5,7 @@ using MonsterCards.Domain.Server;
 using MonsterCards.Infrastructure.Persistance;
 using System.Net;
 using System.Net.Sockets;
+using System.Transactions;
 
 
 namespace MonsterCards.Domain.Entities.Server
@@ -21,15 +22,32 @@ namespace MonsterCards.Domain.Entities.Server
             this.ip = ip;
 
             tcpListener = new TcpListener(ip, port);
-            RegisterEndpoint("users", new CredentialRepository());
-            RegisterEndpoint("sessions", new CredentialRepository());
+            //RegisterEndpoint("users", new CredentialRepository());
+            RegisterEndpoint("users", new UserHandler());
+
+            //RegisterEndpoint("sessions", new CredentialRepository());
+            RegisterEndpoint("sessions", new SessionHandler());
+            RegisterEndpoint("packages", new PackageHandler());
+            RegisterEndpoint("transactions", new TransactionsHandler());
+            RegisterEndpoint("cards", new CardHandler());
+            RegisterEndpoint("deck", new DeckHandler());
+            RegisterEndpoint("stats", new StatHandler());
+            RegisterEndpoint("scoreboard", new ScoreboardHandler());
+            RegisterEndpoint("battles", new BattlesHandler());
         }
 
+
+        /*
+private void RegisterEndpoint(string v, UserHandler userHandler)
+{
+   throw new NotImplementedException();
+}
+*/
         public void Run()
         {
-            /*
-            StackRepository stackRepository = new StackRepository();
-            stackRepository.initStackTable();
+            /* 
+            StackRepository stackRepository = new StackRepository();        // UNCOMMENT
+            stackRepository.initStackTable();                              // UNCOMMENT
             UserRepository userRepository = new UserRepository();
             User dummy = new User();
             dummy.user_id = 1;
@@ -50,12 +68,13 @@ namespace MonsterCards.Domain.Entities.Server
 
 
             tcpListener.Start();
+            Battle battle = new Battle();
             while (true)
             {
                 var clientSocket = tcpListener.AcceptTcpClient();
                 var httpProcessor = new HttpProcessor(this, clientSocket);
-
-                httpProcessor.Process();
+                Thread newThread = new Thread(() => httpProcessor.Process(battle));
+                newThread.Start();
             }
         }
 
@@ -65,7 +84,7 @@ namespace MonsterCards.Domain.Entities.Server
         }
 
 
-
+// / battle is the battles request
 
 
     }

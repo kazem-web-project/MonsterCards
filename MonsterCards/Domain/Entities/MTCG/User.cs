@@ -14,10 +14,10 @@ using MonsterCards.Infrastructure.Persistance;
 
 namespace MonsterCards.Domain.Entities.MTCG
 {
-    internal class User : ILoginable,
+    public class User : ILoginable,
                     IRegistrable, IAcquireable, ICompareable,
                     IBattleable, ITradable, IBattleResultReceivable,
-                    IPlayable, ICardExchangable, Ilogable, IHttpEndpoint
+                    IPlayable, ICardExchangable, Ilogable
     { 
 
         const int winstatvalue = 3;
@@ -74,21 +74,31 @@ namespace MonsterCards.Domain.Entities.MTCG
             throw new NotImplementedException();
         }
 
-        public bool battle( User myUser,User userOpponent)
+        public string battle(User myUser, User userOpponent)
         {
             List<Card> playedCards = new List<Card>();
-
-            while (playedCards.Count < 2)//8)
+            string responseMessage = "";
+            int myUserDeckCount = myUser.deck.Count;
+            int userOpponentDeckCount = userOpponent.deck.Count;
+            while (playedCards.Count < (myUserDeckCount + userOpponentDeckCount))           
             { // water
               // 5 has problem
-                int myUserRandNum = rnd.Next(0, myUser.deck.Count );
-                int userOpponentRandNum = rnd.Next(0, userOpponent.deck.Count );
+                int myUserRandNum = myUser.deck.Count != 0 ? rnd.Next(0, myUser.deck.Count - 1) : 0;
+                int userOpponentRandNum = userOpponent.deck.Count != 0 ? rnd.Next(0, userOpponent.deck.Count - 1) : 0;
+                if (myUser.deck.Count==0 || userOpponent.deck.Count==0 )
+                {
+                    break;
+                }
                 if (playedCards.Contains(myUser.deck[myUserRandNum]) || playedCards.Contains(userOpponent.deck[userOpponentRandNum])) continue;
                 playedCards.Add(myUser.deck[myUserRandNum]);
                 playedCards.Add(userOpponent.deck[userOpponentRandNum]);
                 Console.WriteLine(myUser.ToString() + " plays against" + userOpponent.ToString() + ":");
                 Console.WriteLine(myUser.deck[myUserRandNum].ToString() + " Card is agaist " + userOpponent.deck[userOpponentRandNum].ToString() + "!");
+                responseMessage += myUser.ToString() + " plays against" + userOpponent.ToString() + ":";
+                responseMessage += myUser.deck[myUserRandNum].ToString() + " Card is agaist " + userOpponent.deck[userOpponentRandNum].ToString() + "!";
                 battleTwoCards(myUser.deck[myUserRandNum], userOpponent.deck[userOpponentRandNum], myUser.deck, userOpponent.deck);
+                myUser.stat -= (myUserDeckCount - myUser.deck.Count);
+                userOpponent.stat -= (userOpponentDeckCount - userOpponent.deck.Count);
             }
 
             //for (int i = 0; i < myUser.deck.Count; i++)
@@ -110,7 +120,7 @@ namespace MonsterCards.Domain.Entities.MTCG
             //        //battleTwoCards(myUser.deck[i], userOpponent.deck[randNum], ref myUserDeck, ref userOpponentDeck);
             //        if(randNum < myUser.deck.Count)
             //        {
-                        
+
             //        }
             //    }
             //}
@@ -119,8 +129,61 @@ namespace MonsterCards.Domain.Entities.MTCG
 
             // userOpponent.deck.Clear();
             //userOpponent.deck.AddRange(userOpponentDeck.cardsDeck);
-            
-            return true;
+
+            return responseMessage;
+        }
+        public string battle2(User myUser, User userOpponent,int cardNum)
+        {
+            List<Card> playedCards = new List<Card>();
+            string responseMessage = "";
+   
+            // while (playedCards.Count < 20)
+            while (playedCards.Count < cardNum)
+            { // water
+              // 5 has problem
+                int myUserRandNum = rnd.Next(0, myUser.deck.Count);
+                int userOpponentRandNum = rnd.Next(0, userOpponent.deck.Count);
+                if (playedCards.Contains(myUser.deck[myUserRandNum]) || playedCards.Contains(userOpponent.deck[userOpponentRandNum])) continue;
+                playedCards.Add(myUser.deck[myUserRandNum]);
+                playedCards.Add(userOpponent.deck[userOpponentRandNum]);
+                Console.WriteLine(myUser.ToString() + " plays against" + userOpponent.ToString() + ":");
+                Console.WriteLine(myUser.deck[myUserRandNum].ToString() + " Card is agaist " + userOpponent.deck[userOpponentRandNum].ToString() + "!");
+                responseMessage += myUser.ToString() + " plays against" + userOpponent.ToString() + ":";
+                responseMessage += myUser.deck[myUserRandNum].ToString() + " Card is agaist " + userOpponent.deck[userOpponentRandNum].ToString() + "!";
+                battleTwoCards(myUser.deck[myUserRandNum], userOpponent.deck[userOpponentRandNum], myUser.deck, userOpponent.deck);
+
+            }
+
+            //for (int i = 0; i < myUser.deck.Count; i++)
+            //{
+            //    var randNumsUsed = new List<int>(4) { 0,1,2,3};
+            //    for (int j = 0; j < userOpponent.deck.Count; j++)
+            //    {
+            //        if (randNumsUsed.Count==0){ return true; }
+            //        int randNum;
+            //        do
+            //        {
+            //            randNum = rnd.Next(0, 4);
+            //            if(randNumsUsed.Contains(randNum)){
+            //                randNumsUsed.Remove(randNum);
+            //                break;
+            //            }
+            //        } while (true);
+            //        //randNumsUsed.Add(randNum);
+            //        //battleTwoCards(myUser.deck[i], userOpponent.deck[randNum], ref myUserDeck, ref userOpponentDeck);
+            //        if(randNum < myUser.deck.Count)
+            //        {
+
+            //        }
+            //    }
+            //}
+            // myUser.deck.Clear();
+            //myUser.deck.AddRange(myUserDeck.cardsDeck);
+
+            // userOpponent.deck.Clear();
+            //userOpponent.deck.AddRange(userOpponentDeck.cardsDeck);
+
+            return responseMessage;
         }
         public void battleTwoCards(Card myCard, Card cardOpponent, List<Card> myUserDeck, List<Card> opponentDeck)
         {                
@@ -214,8 +277,8 @@ namespace MonsterCards.Domain.Entities.MTCG
         public void battleEffective(Card winerCard, Card lostCard, List<Card> myUserDeck, List<Card> OpponentDeck)
             // (Card winerCard, Card lostCard, List<Card> myUserDeck, List<Card> OpponentDeck)
         {
-            int userDamege = battleEffectiveDamage(lostCard.Damage);
-            int opponentDamage = battleNotEffectiveDamage(winerCard.Damage);
+            int userDamege = battleEffectiveDamage((int)lostCard.Damage);
+            int opponentDamage = battleNotEffectiveDamage((int)winerCard.Damage);
             if (userDamege > opponentDamage)
             {
                 Log(">>>>>>" +  lostCard.Name + " with damage: " + userDamege+ " Has won " + winerCard.Name + " with damage: " + opponentDamage +  "<<<<<<<");
@@ -309,14 +372,15 @@ namespace MonsterCards.Domain.Entities.MTCG
         }
         public override string ToString()
         {
-            return this.name + " ";
+            return this.name + " Stat: " + this.stat+
+                " Coins:" + this.coins + "      " ;
         }
 
         public void Log(string message)
         {
             Console.WriteLine(message);
         }
-
+        /*
         public bool HandleRequest(HttpRequest rq, HttpResponse rs)
         {
 
@@ -365,6 +429,7 @@ namespace MonsterCards.Domain.Entities.MTCG
             throw new NotImplementedException();
 
         }
+        */
 
         public void loadDeckCardsFromStack()
         {
@@ -375,6 +440,26 @@ namespace MonsterCards.Domain.Entities.MTCG
                 this.deck.Add(this.stack.ElementAt(i));
             }
             
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is User user &&
+                   user_id == user.user_id;
+        }
+
+        public override int GetHashCode()
+        {
+            HashCode hash = new HashCode();
+            hash.Add(rnd);
+            hash.Add(UserCredential);
+            hash.Add(coins);
+            hash.Add(stat);
+            hash.Add(name);
+            hash.Add(stack);
+            hash.Add(deck);
+            hash.Add(user_id);
+            return hash.ToHashCode();
         }
     }
 }

@@ -7,9 +7,24 @@ using System.Threading.Tasks;
 
 namespace MonsterCards.Domain.Entities.MTCG
 {
-    internal class MonsterCard : Card
+    [Serializable]
+    public class MonsterCard : Card
     {
-        public MonsterCard(string name, int damage, ElementType elementType) : base(name, damage, elementType)
+        public MonsterCard(string name, double damage, ElementType elementType) : base(name, damage, elementType)
+        {
+        }
+
+        public MonsterCard(string name, double damage, ElementType elementType, string id) : base(id, name, damage, elementType)
+        {
+
+        }
+
+
+        public MonsterCard(string id,string name, double damage) :base(id, name, damage)
+        {
+
+        }
+        protected MonsterCard()
         {
         }
     }

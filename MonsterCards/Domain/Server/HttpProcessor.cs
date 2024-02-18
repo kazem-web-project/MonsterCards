@@ -1,5 +1,7 @@
 ﻿using MonsterCards.Application;
+using MonsterCards.Domain.Entities.MTCG;
 using MonsterCards.Domain.Entities.Server;
+using MonsterCards.Infrastructure.Persistance;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +20,12 @@ namespace MonsterCards.Domain.Server
         public HttpProcessor(HttpServer httpServer, TcpClient clientSocket)
         {
             this.httpServer = httpServer;
-            this.clientSocket = clientSocket;
-            
+            this.clientSocket = clientSocket;            
         }
 
-        public void Process()
+        
+
+        public void Process(Battle battle)
         {
             using var reader = new StreamReader(clientSocket.GetStream());
             var rq = new HttpRequest(reader);
@@ -30,17 +33,17 @@ namespace MonsterCards.Domain.Server
 
             using var writer = new StreamWriter(clientSocket.GetStream()) { AutoFlush = true };
             var rs = new HttpResponse(writer);
-            
             var endpoint = httpServer.Endpoints.ContainsKey(rq.Path[1]) ? httpServer.Endpoints[rq.Path[1]] : null;
-            if (endpoint == null || !endpoint.HandleRequest(rq, rs))
+
+
+            if (endpoint == null || !endpoint.HandleRequest(rq, rs,battle))
             {
                 //Thread.Sleep(10000);
                 rs.ResponseCode = 404;
                 rs.ResponseMessage = "Not Found";
                 rs.Content = "<html><body>Not found!</body></html>";
                 rs.Headers.Add("Content-Type", "text/html");
-            }
-            
+            }            
             else 
             {
                 if (rs.ResponseCode== 300)
@@ -72,8 +75,7 @@ namespace MonsterCards.Domain.Server
                 {
                     rs.Content = "<html><body>" + rs.ResponseMessage + "</body></html>";
                     rs.Headers.Add("Content-Type", "text/html");
-                }
-                
+                }              
 
             }
 
@@ -85,6 +87,19 @@ namespace MonsterCards.Domain.Server
             writer.Flush();
 
             Console.WriteLine("========================================");
+
+        }
+        public Battle ckeckBattleStart()
+        {
+            
+            CredentialRepository credentialRepository = new CredentialRepository();
+            List<User> users = credentialRepository.retriveLoggedUsers();
+            // public List<User> retriveLoggedUsers(HttpResponse rs)
+            if (users.Count == 2)
+            {
+                return new Battle(users);                
+            }
+            return null;
 
         }
     }

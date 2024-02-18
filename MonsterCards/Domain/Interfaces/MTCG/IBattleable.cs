@@ -10,7 +10,7 @@ namespace MonsterCards.Domain.Interfaces.MTCG
 {
     internal interface IBattleable
     {
-        public bool battle( User myUser,  User userOpponent);
+        public string battle( User myUser,  User userOpponent);
         public void battleTwoCards(Card myCard, Card cardOpponent, List<Card> myUserDeck, List<Card> opponentDeck);
         public int battleEffectiveDamage(int myCardDamage);
         public int battleNotEffectiveDamage(int myCardDamage);
