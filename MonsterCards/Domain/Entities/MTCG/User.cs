@@ -97,8 +97,17 @@ namespace MonsterCards.Domain.Entities.MTCG
                 responseMessage += myUser.ToString() + " plays against" + userOpponent.ToString() + ":";
                 responseMessage += myUser.deck[myUserRandNum].ToString() + " Card is agaist " + userOpponent.deck[userOpponentRandNum].ToString() + "!";
                 battleTwoCards(myUser.deck[myUserRandNum], userOpponent.deck[userOpponentRandNum], myUser.deck, userOpponent.deck);
+
                 myUser.stat -= (myUserDeckCount - myUser.deck.Count);
                 userOpponent.stat -= (userOpponentDeckCount - userOpponent.deck.Count);
+            }
+            if (myUser.stat> userOpponent.stat)
+            {
+                responseMessage += myUser.name + " won!!";
+            }
+            else
+            {
+                responseMessage += userOpponent.name + " won!!";
             }
 
             //for (int i = 0; i < myUser.deck.Count; i++)
@@ -460,6 +469,10 @@ namespace MonsterCards.Domain.Entities.MTCG
             hash.Add(deck);
             hash.Add(user_id);
             return hash.ToHashCode();
+        }
+        public string gewiner()
+        {
+            return "";
         }
     }
 }
